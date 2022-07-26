@@ -13,7 +13,7 @@ public class EventListener {
     public static final String EX_REGISTER_ANIME = "anime.save";
     public static final String ACTION_REGISTER_ANIME_RECORD = "send anime";
 
-    @RabbitListener(queues = EX_REGISTER_ANIME + "." + ACTION_REGISTER_ANIME_RECORD)
+    //@RabbitListener(queues = EX_REGISTER_ANIME + "." + ACTION_REGISTER_ANIME_RECORD)
     public void listenerTest(String payLoad) {
         try {
 
