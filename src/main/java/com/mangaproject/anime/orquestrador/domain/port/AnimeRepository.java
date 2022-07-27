@@ -9,4 +9,10 @@ public interface AnimeRepository {
     List<Anime> findAnime();
 
     Anime findAnimeById(Long id);
+
+    Anime saveAnime(Anime anime);
+
+    Anime updateAnime(Anime anime);
+
+    void deleteAnime(Long id);
 }

@@ -21,7 +21,7 @@ public class AnimeResponseRepresentation {
     @JsonProperty("author")
     private String author;
 
-    @JsonProperty("yerPublication")
+    @JsonProperty("yearPublication")
     private Integer yearPublication;
 
     @JsonProperty("episodesNumber")

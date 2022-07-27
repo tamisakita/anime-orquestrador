@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -24,8 +25,23 @@ public class AnimeRepositoryImpl implements AnimeRepository {
 
     @Override
     public Anime findAnimeById(Long id) {
-        return null;
+        return restTemplate.getForEntity("http://localhost:8080/v1/anime-rest-api/{id}", Anime.class, id).getBody();
     }
 
-    //return restTemplate.postForEntity(this.urlAtomBoleto + "inserirControleGeracaoBoletoOnline", entrada, ControleGeracaoBoletoOnline.class).getBody();
+    @Override
+    public Anime saveAnime(Anime anime) {
+        return restTemplate.postForEntity("http://localhost:8080/v1/anime-rest-api/save", anime, Anime.class).getBody();
+    }
+
+    @Override
+    public Anime updateAnime(Anime anime) {
+        restTemplate.put("http://localhost:8080/v1/anime-rest-api/{id}", anime, anime.getId());
+        return anime;
+    }
+
+    @Override
+    public void deleteAnime(Long id) {
+        restTemplate.delete("http://localhost:8080/v1/anime-rest-api/{id}", Anime.class, id);
+    }
+
 }

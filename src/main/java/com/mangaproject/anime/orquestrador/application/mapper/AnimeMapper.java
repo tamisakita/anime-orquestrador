@@ -20,7 +20,6 @@ public class AnimeMapper {
         return modelMapperSupplier.get().map(representation, Anime.class);
     }
 
-    //do domain(service) para representation(espelho do que o usuario recebe de resposta)
     public AnimeResponseRepresentation toRepresentation(Anime anime){
         return modelMapperSupplier.get().map(anime, AnimeResponseRepresentation.class);
     }

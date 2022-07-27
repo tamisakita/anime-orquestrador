@@ -21,4 +21,17 @@ public class AnimeService {
     public Anime findAnimeById(Long id) {
         return template.requestBody(AnimeRouter.ROUTE_URI_BY_ID, id, Anime.class);
     }
+
+    public Anime saveAnime(Anime anime) {
+        return template.requestBody(AnimeRouter.ROUTE_URI_SAVE, anime, Anime.class);
+    }
+
+    public Anime updateAnime(Long id, Anime anime) {
+        anime.setId(id);
+        return template.requestBody(AnimeRouter.ROUTE_URI_UPDATE, anime, Anime.class);
+    }
+
+    public void deleteAnime(Long id) {
+        template.sendBody(AnimeRouter.ROUTE_URI_DELETE, id);
+    }
 }
