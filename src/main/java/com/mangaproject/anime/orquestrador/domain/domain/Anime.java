@@ -3,12 +3,14 @@ package com.mangaproject.anime.orquestrador.domain.domain;
 import com.mangaproject.anime.orquestrador.domain.enums.genreType;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Anime {
+public class Anime implements Serializable {
 
     private Long id;
     private String name;

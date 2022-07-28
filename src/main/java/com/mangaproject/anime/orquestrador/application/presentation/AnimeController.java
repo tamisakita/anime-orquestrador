@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
@@ -22,7 +23,7 @@ public class AnimeController {
 
     @GetMapping(path = "/")
     public ResponseEntity<List<AnimeResponseRepresentation>> searchAnime() {
-        var animeList = animeService.findAnime();
+        var animeList = animeService.findAnime().stream().toList();
         var representationList = AnimeMapper.toAnimeResponseRepresentationList(animeList);
 //        return ResponseEntity.ok(representationList);
         return ResponseEntity.status(HttpStatus.OK).body(representationList);

@@ -26,9 +26,12 @@ public class AnimeMapper {
 
     public List<AnimeResponseRepresentation> toAnimeResponseRepresentationList(List<Anime> animeList) {
         List<AnimeResponseRepresentation> animeRepresentationList = new ArrayList<>();
-        for (Anime anime : animeList) {
+//        for (Anime anime : animeList) {
+//            animeRepresentationList.add(toRepresentation(anime));
+//        }
+        animeList.forEach(anime -> {
             animeRepresentationList.add(toRepresentation(anime));
-        }
+        });
 
         return animeRepresentationList;
     }

@@ -4,7 +4,10 @@ import com.mangaproject.anime.orquestrador.domain.camel.CamelContextWrapper;
 import com.mangaproject.anime.orquestrador.domain.camel.route.AnimeRouter;
 import com.mangaproject.anime.orquestrador.domain.domain.Anime;
 import org.apache.camel.ProducerTemplate;
+import com.fasterxml.jackson.core.type.TypeReference;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //Servic do domínio
@@ -15,6 +18,9 @@ public class AnimeService {
         this.template = wrapper.createProducerTemplate();
     }
     public List<Anime> findAnime() {
+        //List<Anime> animeList = new ArrayList<>();
+        //var findAnimeReturn = (List<Anime>) template.requestBody(AnimeRouter.ROUTE_URI, null, Object.class);
+        //animeList.addAll(findAnimeReturn);
         return template.requestBody(AnimeRouter.ROUTE_URI, null, List.class);
     }
 

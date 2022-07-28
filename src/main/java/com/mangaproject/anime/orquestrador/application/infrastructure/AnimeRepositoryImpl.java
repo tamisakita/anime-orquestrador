@@ -1,17 +1,19 @@
 package com.mangaproject.anime.orquestrador.application.infrastructure;
 
+import com.fasterxml.jackson.databind.type.ReferenceType;
 import com.mangaproject.anime.orquestrador.domain.domain.Anime;
 import com.mangaproject.anime.orquestrador.domain.port.AnimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class AnimeRepositoryImpl implements AnimeRepository {
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public AnimeRepositoryImpl(RestTemplate restTemplate) {
@@ -20,7 +22,8 @@ public class AnimeRepositoryImpl implements AnimeRepository {
 
     @Override
     public List<Anime> findAnime() {
-        return restTemplate.getForEntity("http://localhost:8080/v1/anime-rest-api/", List.class).getBody();
+        //return restTemplate.exchange("http://localhost:8080/v1/anime-rest-api/", HttpMethod.GET, null, List.class).getBody();
+        return List.of(restTemplate.getForEntity("http://localhost:8080/v1/anime-rest-api/", Anime[].class).getBody());
     }
 
     @Override
@@ -41,7 +44,7 @@ public class AnimeRepositoryImpl implements AnimeRepository {
 
     @Override
     public void deleteAnime(Long id) {
-        restTemplate.delete("http://localhost:8080/v1/anime-rest-api/{id}", Anime.class, id);
+        restTemplate.delete("http://localhost:8080/v1/anime-rest-api/{id}", id);
     }
 
 }
