@@ -4,10 +4,7 @@ import com.mangaproject.anime.orquestrador.domain.camel.CamelContextWrapper;
 import com.mangaproject.anime.orquestrador.domain.camel.route.AnimeRouter;
 import com.mangaproject.anime.orquestrador.domain.domain.Anime;
 import org.apache.camel.ProducerTemplate;
-import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 //Servic do domínio

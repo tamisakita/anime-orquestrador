@@ -1,29 +1,34 @@
 package com.mangaproject.anime.orquestrador.application.infrastructure;
 
-import com.fasterxml.jackson.databind.type.ReferenceType;
 import com.mangaproject.anime.orquestrador.domain.domain.Anime;
 import com.mangaproject.anime.orquestrador.domain.port.AnimeRepository;
+import com.mangaproject.anime.orquestrador.domain.utils.JsonUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 @Repository
+@Slf4j
 public class AnimeRepositoryImpl implements AnimeRepository {
     private final RestTemplate restTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public AnimeRepositoryImpl(RestTemplate restTemplate) {
+    public AnimeRepositoryImpl(RestTemplate restTemplate, RabbitTemplate rabbitTemplate) {
         this.restTemplate = restTemplate;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
     public List<Anime> findAnime() {
-        //return restTemplate.exchange("http://localhost:8080/v1/anime-rest-api/", HttpMethod.GET, null, List.class).getBody();
-        return List.of(restTemplate.getForEntity("http://localhost:8080/v1/anime-rest-api/", Anime[].class).getBody());
+        var animeList = List.of(restTemplate.getForEntity("http://localhost:8080/v1/anime-rest-api/", Anime[].class).getBody());
+        rabbitTemplate.convertAndSend("animes", "anime-list-key", JsonUtil.toJson(animeList));
+        return animeList;
     }
 
     @Override
@@ -33,7 +38,9 @@ public class AnimeRepositoryImpl implements AnimeRepository {
 
     @Override
     public Anime saveAnime(Anime anime) {
-        return restTemplate.postForEntity("http://localhost:8080/v1/anime-rest-api/save", anime, Anime.class).getBody();
+        var animeObj = restTemplate.postForEntity("http://localhost:8080/v1/anime-rest-api/save", anime, Anime.class).getBody();
+        rabbitTemplate.convertAndSend("animes", "anime-routing-key", JsonUtil.toJson(animeObj));
+        return animeObj;
     }
 
     @Override
