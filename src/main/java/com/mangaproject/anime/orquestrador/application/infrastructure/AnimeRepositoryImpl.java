@@ -10,13 +10,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Queue;
 
 @Repository
 @Slf4j
 public class AnimeRepositoryImpl implements AnimeRepository {
     private final RestTemplate restTemplate;
     private final RabbitTemplate rabbitTemplate;
+
+    private static final String ANIME_EXCHANGE = "animes";
+
+    private static final String BASE_PATH = "http://localhost:8080/v1/anime-rest-api/";
 
     @Autowired
     public AnimeRepositoryImpl(RestTemplate restTemplate, RabbitTemplate rabbitTemplate) {
@@ -26,32 +29,32 @@ public class AnimeRepositoryImpl implements AnimeRepository {
 
     @Override
     public List<Anime> findAnime() {
-        var animeList = List.of(restTemplate.getForEntity("http://localhost:8080/v1/anime-rest-api/", Anime[].class).getBody());
-        rabbitTemplate.convertAndSend("animes", "anime-list-key", JsonUtil.toJson(animeList));
+        var animeList = List.of(restTemplate.getForEntity(BASE_PATH, Anime[].class).getBody());
+        rabbitTemplate.convertAndSend(ANIME_EXCHANGE, "anime-list-key", JsonUtil.toJson(animeList));
         return animeList;
     }
 
     @Override
     public Anime findAnimeById(Long id) {
-        return restTemplate.getForEntity("http://localhost:8080/v1/anime-rest-api/{id}", Anime.class, id).getBody();
+        return restTemplate.getForEntity(BASE_PATH + "{id}", Anime.class, id).getBody();
     }
 
     @Override
     public Anime saveAnime(Anime anime) {
-        var animeObj = restTemplate.postForEntity("http://localhost:8080/v1/anime-rest-api/save", anime, Anime.class).getBody();
-        rabbitTemplate.convertAndSend("animes", "anime-routing-key", JsonUtil.toJson(animeObj));
+        var animeObj = restTemplate.postForEntity(BASE_PATH + "save", anime, Anime.class).getBody();
+        rabbitTemplate.convertAndSend(ANIME_EXCHANGE, "anime-routing-key", JsonUtil.toJson(animeObj));
         return animeObj;
     }
 
     @Override
     public Anime updateAnime(Anime anime) {
-        restTemplate.put("http://localhost:8080/v1/anime-rest-api/{id}", anime, anime.getId());
+        restTemplate.put(BASE_PATH + "{id}", anime, anime.getId());
         return anime;
     }
 
     @Override
     public void deleteAnime(Long id) {
-        restTemplate.delete("http://localhost:8080/v1/anime-rest-api/{id}", id);
+        restTemplate.delete(BASE_PATH + "{id}", id);
     }
 
 }
