@@ -1,6 +1,6 @@
 # Manga Project
 
-This is the orch component that integrates with the atomic component through Camel.
+This is the orch component that integrates with the atomic component through Camel and send messages to orch consumer through RabbitMQ.
 
 ![alt text](https://github.com/tamisakita/anime-rest-api/blob/main/arquitetura.JPG "Arquitetura")
 
@@ -13,7 +13,8 @@ Create an API REST to control Anime registration with Spring Boot, hexagonal arc
 ## Technologies
  * Java 18
  * Spring Boot
- * Maven  
+ * Maven
+ * Camel  
  * RabbitMQ
  
  ## Author & Version Control
