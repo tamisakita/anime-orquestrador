@@ -6,6 +6,7 @@ import com.mangaproject.anime.orquestrador.domain.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +18,7 @@ public class AnimeRepositoryImpl implements AnimeRepository {
     private final RestTemplate restTemplate;
     private final RabbitTemplate rabbitTemplate;
 
-    private static final String ANIME_EXCHANGE = "animes";
+    private static final String ANIME_EXCHANGE = "amq.direct";
 
     private static final String BASE_PATH = "http://localhost:8080/v1/anime-rest-api/";
 
@@ -30,7 +31,7 @@ public class AnimeRepositoryImpl implements AnimeRepository {
     @Override
     public List<Anime> findAnime() {
         var animeList = List.of(restTemplate.getForEntity(BASE_PATH, Anime[].class).getBody());
-        rabbitTemplate.convertAndSend(ANIME_EXCHANGE, "anime-list-key", JsonUtil.toJson(animeList));
+        rabbitTemplate.convertAndSend(ANIME_EXCHANGE, "anime-in-key", JsonUtil.toJson(animeList));
         return animeList;
     }
 
@@ -41,8 +42,8 @@ public class AnimeRepositoryImpl implements AnimeRepository {
 
     @Override
     public Anime saveAnime(Anime anime) {
-        var animeObj = restTemplate.postForEntity(BASE_PATH + "save", anime, Anime.class).getBody();
-        rabbitTemplate.convertAndSend(ANIME_EXCHANGE, "anime-routing-key", JsonUtil.toJson(animeObj));
+        var animeObj = restTemplate.postForEntity(BASE_PATH + "anime", anime, Anime.class).getBody();
+        rabbitTemplate.convertAndSend(ANIME_EXCHANGE, "anime-in-key", JsonUtil.toJson(animeObj));
         return animeObj;
     }
 
