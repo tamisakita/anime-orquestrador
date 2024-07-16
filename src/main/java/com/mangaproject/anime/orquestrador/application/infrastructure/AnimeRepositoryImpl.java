@@ -31,7 +31,6 @@ public class AnimeRepositoryImpl implements AnimeRepository {
     @Override
     public List<Anime> findAnime() {
         var animeList = List.of(restTemplate.getForEntity(BASE_PATH, Anime[].class).getBody());
-        rabbitTemplate.convertAndSend(ANIME_EXCHANGE, "anime-in-key", JsonUtil.toJson(animeList));
         return animeList;
     }
 
